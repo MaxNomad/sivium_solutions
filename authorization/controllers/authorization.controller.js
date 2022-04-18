@@ -2,7 +2,7 @@ const jwtSecret = require('../../common/config/env.config.js').jwt_secret,
     jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const uuid = require('uuid');
-
+const TokenModel = require('../../authorization/models/token.model');
 exports.login = (req, res) => {
     try {
         let refreshId = req.body.userId + jwtSecret;
@@ -26,4 +26,34 @@ exports.refresh_token = (req, res) => {
     } catch (err) {
         res.status(500).send({errors: err});
     }
+};
+exports.verifyJWTtoken = (req, res, next) => {
+    try {
+        let accessToken = req.headers['authorization'].split(' ')[1];
+        if(!TokenModel.findTokens({accessToken: accessToken})){
+            next();
+        }else{
+            res.status(404).send();
+        }
+    } catch (err) {
+        res.status(500).send({errors: err});
+    }
+};
+
+exports.JWTLogout = (req, res, next) => {
+    try {
+    let accessToken = req.headers['authorization'].split(' ')[1];
+    let refreshToken = req.body.refresh_token;
+    if(!TokenModel.findTokens({accessToken: accessToken})){
+        TokenModel.addBlacklist({accessToken: accessToken})
+        res.status(200).send();
+    }
+    else{
+        res.status(404).send();
+    }
+
+} catch (err) {
+    res.status(500).send({errors: err});
+}
+    
 };

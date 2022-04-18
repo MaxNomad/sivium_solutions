@@ -19,6 +19,12 @@ exports.routesConfig = function (app) {
         AuthValidationMiddleware.validRefreshNeeded,
         AuthorizationController.login
     ]);
+    app.put('/auth/logout', [
+        AuthValidationMiddleware.validJWTNeeded,
+        AuthorizationController.JWTLogout
+        
+    ]);
+
     app.post('/auth/oauth2callback', [
 
     ]);
