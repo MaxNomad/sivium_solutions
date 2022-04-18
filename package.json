@@ -1,0 +1,25 @@
+{
+  "name": "sivium_rest_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "run-linux": "pm2 kill && pm2 startup && systemctl enable pm2-root && pm2 start app.js --watch -i max --restart-delay=3000 && pm2 save",
+    "run-win": "pm2 kill && pm2 start app.js --watch --exp-backoff-restart-delay=100",
+    "prod-dev": "pm2-dev start app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validation": "^4.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.3",
+    "nodemon": "^2.0.15",
+    "request-ip": "^2.1.3",
+    "uuid": "^8.3.0"
+  }
+}
