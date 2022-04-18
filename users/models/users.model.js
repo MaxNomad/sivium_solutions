@@ -10,13 +10,18 @@ const userSchema = new Schema({
     secureKey: { type: String, default: null },
     register: { type: Date, default: Date.now },
     lastLoginIP : { type: String , default: null },
-    userCountry: { type: String },
-    userAdress: { type: String },
-    userPostal: { type: String },
+    userCountry: { type: String , default: null },
+    userAdress: { type: String , default: null },
+    userPostal: { type: String , default: null },
     enable2FA: { type: Boolean, default: false },
     projectsID: [Schema.Types.Mixed],
     metamaskAdress: { type: String , default: null },
-    userCryptoBalance: {type: Number, default: 0 }
+    userCryptoBalance: {type: Number, default: 0 },
+    sessionList : [Schema.Types.Mixed],
+    ticketsList : [Schema.Types.Mixed],
+    ordersList : [Schema.Types.Mixed],
+    nftData : [Schema.Types.Mixed]
+
 
 
 });

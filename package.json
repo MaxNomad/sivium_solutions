@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "start": "node app.js",
-    "run-linux": "pm2 kill && pm2 startup && systemctl enable pm2-root && pm2 start app.js --watch -i max --restart-delay=3000 && pm2 save",
-    "run-win": "pm2 kill && pm2 start app.js --watch --exp-backoff-restart-delay=100",
-    "prod-dev": "pm2-dev start app.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "run-linux": "pm2 kill && pm2 startup && systemctl enable pm2-root && pm2 start index.js --watch -i max --restart-delay=3000 && pm2 save",
+    "run-win": "pm2 kill && pm2 start index.js --watch -i max --exp-backoff-restart-delay=100",
+    "prod-dev": "pm2-dev start index.js"
   },
   "author": "",
   "license": "ISC",
