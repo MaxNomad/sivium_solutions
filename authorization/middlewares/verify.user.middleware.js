@@ -34,7 +34,6 @@ exports.check2FA = (req, res, next) => {
                 return res.status(401).send({ error_details: {name: "2FAEnabled", message: "2FAEnabled", statusCode: res.statusCode, error: "Unauthorized"} });
             }
             else{
-                console.log(user[0].enable2FA)
                 next()
             }
 

@@ -12,9 +12,9 @@ exports.login = (req, res) => {
         let token = jwt.sign(req.body, jwtSecret);
         let b = Buffer.from(hash);
         let refresh_token = b.toString('base64');
-        res.status(201).send({accessToken: token, refreshToken: refresh_token});
+        res.status(201).send({ accessToken: token, refreshToken: refresh_token });
     } catch (err) {
-        res.status(500).send({errors: err});
+        return res.status(500).send({ error_details: { name: "ServerError", message: err, statusCode: res.statusCode, error: "Internal Server Error" } });
     }
 };
 
@@ -22,38 +22,43 @@ exports.refresh_token = (req, res) => {
     try {
         req.body = req.jwt;
         let token = jwt.sign(req.body, jwtSecret);
-        res.status(201).send({id: token});
+        res.status(201).send({ id: token });
     } catch (err) {
-        res.status(500).send({errors: err});
+        return res.status(500).send({ error_details: { name: "ServerError", message: err, statusCode: res.statusCode, error: "Internal Server Error" } });
     }
 };
-exports.verifyJWTtoken = (req, res, next) => {
+
+exports.verifyJWTBlacklist = (req, res, next) => {
     try {
         let accessToken = req.headers['authorization'].split(' ')[1];
-        if(!TokenModel.findTokens({accessToken: accessToken})){
-            next();
-        }else{
-            res.status(404).send();
-        }
+        TokenModel.findTokens({ accessToken: accessToken }).then((result) => {
+            if (!result) {
+                next();
+            } else {
+                return res.status(400).send({ error_details: { name: "TokenInBlackList", message: "Access token blacklisted", statusCode: res.statusCode, error: "Bad Request" } });
+
+            }
+        });
     } catch (err) {
-        res.status(500).send({errors: err});
+        return res.status(500).send({ error_details: { name: "ServerError", message: err, statusCode: res.statusCode, error: "Internal Server Error" } });
     }
 };
 
 exports.JWTLogout = (req, res, next) => {
     try {
-    let accessToken = req.headers['authorization'].split(' ')[1];
-    let refreshToken = req.body.refresh_token;
-    if(!TokenModel.findTokens({accessToken: accessToken})){
-        TokenModel.addBlacklist({accessToken: accessToken})
-        res.status(200).send();
-    }
-    else{
-        res.status(404).send();
+        let accessToken = req.headers['authorization'].split(' ')[1];
+        TokenModel.findTokens({ accessToken: accessToken }).then((result) => {
+            if (!result) {
+                TokenModel.addBlacklist({ accessToken: accessToken })
+                res.status(200).send();
+            } else {
+                return res.status(400).send({ error_details: { name: "TokenInBlackList", message: "Access token blacklisted", statusCode: res.statusCode, error: "Bad Request" } });
+
+            }
+
+        });
+    } catch (err) {
+        return res.status(500).send({ error_details: { name: "ServerError", message: err, statusCode: res.statusCode, error: "Internal Server Error" } });
     }
 
-} catch (err) {
-    res.status(500).send({errors: err});
-}
-    
 };

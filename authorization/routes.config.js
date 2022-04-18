@@ -15,14 +15,15 @@ exports.routesConfig = function (app) {
 
     app.post('/auth/refresh', [
         AuthValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         AuthValidationMiddleware.verifyRefreshBodyField,
         AuthValidationMiddleware.validRefreshNeeded,
         AuthorizationController.login
     ]);
     app.put('/auth/logout', [
         AuthValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         AuthorizationController.JWTLogout
-        
     ]);
 
     app.post('/auth/oauth2callback', [
