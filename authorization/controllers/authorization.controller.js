@@ -12,7 +12,7 @@ exports.login = (req, res) => {
         let token = jwt.sign(req.body, jwtSecret);
         let b = Buffer.from(hash);
         let refresh_token = b.toString('base64');
-        res.status(201).send({ accessToken: token, refreshToken: refresh_token });
+        res.status(200).send({ accessToken: token, refreshToken: refresh_token });
     } catch (err) {
         return res.status(500).send({ error_details: { name: "ServerError", message: err, statusCode: res.statusCode, error: "Internal Server Error" } });
     }

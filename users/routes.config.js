@@ -12,7 +12,7 @@ const User_Perm = config.permissionLevels.USER;
 
 exports.routesConfig = function (app) {
 
-    
+
     app.post('/auth/sign-up',  [
         validate(FieldMiddleware.signUp),
         UsersController.checkUserExist,
@@ -25,27 +25,33 @@ exports.routesConfig = function (app) {
 
     app.get('/users', [
         ValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         PermissionMiddleware.minimumPermissionLevelRequired(User_Perm),
         UsersController.list
     ]);
     app.get('/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         PermissionMiddleware.minimumPermissionLevelRequired(User_Perm),
         PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
         UsersController.getById
     ]);
     app.patch('/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         PermissionMiddleware.minimumPermissionLevelRequired(User_Perm),
         PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
         UsersController.patchById
     ]);
     app.delete('/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         PermissionMiddleware.minimumPermissionLevelRequired(Admin_Perm),
         UsersController.removeById
     ]);
     app.get('/user/:email', [
+        ValidationMiddleware.validJWTNeeded,
+        AuthorizationController.verifyJWTBlacklist,
         UsersController.checkUserExist
     ]);
 };
